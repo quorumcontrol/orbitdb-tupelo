@@ -16,6 +16,7 @@ export interface TupeloIdentityProviderOptions extends IdentityProviderOptions {
 export class TupeloIdentityProvider extends IdentityProvider {
     static get type() { return type }
     static async verifyIdentity(identity:IdentityAsJson) {
+        console.log("verifying identity: ", identity)
         const c = await Community.getDefault()
         const tip = await c.getTip(identity.id)
         const tree = new ChainTree({

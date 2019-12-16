@@ -1,10 +1,10 @@
 import 'mocha'
 import { expect } from 'chai'
 import { TupeloIdentityProvider, TupeloIdentityProviderOptions } from './identity'
-import Identities, { IdentityProviderOptions } from 'orbit-db-identity-provider'
+import Identities from 'orbit-db-identity-provider'
 import path from 'path'
 import rmrf from 'rimraf'
-import { ChainTree, EcdsaKey, Community, setDataTransaction, setOwnershipTransaction } from 'tupelo-wasm-sdk'
+import { ChainTree, EcdsaKey, Community, setOwnershipTransaction } from 'tupelo-wasm-sdk'
 
 const Keystore: any = require('orbit-db-keystore')
 
