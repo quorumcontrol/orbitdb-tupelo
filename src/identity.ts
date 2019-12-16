@@ -18,26 +18,47 @@ export class TupeloIdentityProvider extends IdentityProvider {
     static async verifyIdentity(identity:IdentityAsJson) {
         console.log("verifying identity: ", identity)
         const c = await Community.getDefault()
-        const tip = await c.getTip(identity.id)
+        let tip
+        try {
+            tip = await c.getTip(identity.id)
+        } catch(e) {
+            console.error("couldn't find tip: ", e)
+            return false
+        }
         const tree = new ChainTree({
             store: c.blockservice,
             tip: tip,
         })
-        const {value} = await tree.resolve(authenticationPath)
-
-        for (const addr of value) {
-            try {
-                const verified = await Tupelo.verifyMessage(addr, Buffer.from(identity.publicKey + identity.signatures.id), Signature.deserializeBinary(Buffer.from(identity.signatures.publicKey, 'base64')))
-                if (verified) {
-                    return true
+        try {
+            const {value, remainderPath} = await tree.resolve(authenticationPath)
+            if (!value || value.length == 0 || remainderPath.length > 0) {
+                throw 'not found'
+            }
+            for (const addr of value) {
+                try {
+                    const verified = await Tupelo.verifyMessage(addr, Buffer.from(identity.publicKey + identity.signatures.id), Signature.deserializeBinary(Buffer.from(identity.signatures.publicKey, 'base64')))
+                    if (verified) {
+                        return true
+                    }
+                } catch(e) {
+                    console.error("error verifying: ", e)
                 }
-            } catch(e) {
-                console.error("error verifying: ", e)
+            }
+        } catch(e) {
+            if (e === 'not found') {
+                // if the authentication path isn't found, then we use the DID for ownership
+                const addr = identity.id.split("did:tupelo:")[1]
+                try {
+                    const verified = await Tupelo.verifyMessage(addr, Buffer.from(identity.publicKey + identity.signatures.id), Signature.deserializeBinary(Buffer.from(identity.signatures.publicKey, 'base64')))
+                    if (verified) {
+                        return true
+                    }
+                } catch(e) {
+                    return false
+                }
             }
         }
 
-        console.log("verifyIdentity: ", identity)
-        // TODO: do this
         return false
     }
 

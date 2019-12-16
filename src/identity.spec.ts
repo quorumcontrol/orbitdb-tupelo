@@ -4,17 +4,17 @@ import { TupeloIdentityProvider, TupeloIdentityProviderOptions } from './identit
 import Identities from 'orbit-db-identity-provider'
 import path from 'path'
 import rmrf from 'rimraf'
-import { ChainTree, EcdsaKey, Community, setOwnershipTransaction } from 'tupelo-wasm-sdk'
+import { ChainTree, EcdsaKey, Community, setOwnershipTransaction, setDataTransaction } from 'tupelo-wasm-sdk'
 
 const Keystore: any = require('orbit-db-keystore')
 
 const keypath = path.resolve('./test/keys')
-let keystore: any
 
 const type = TupeloIdentityProvider.type
 
 describe('TupeloIdentity', () => {
     let community: Community
+    let keystore: any
 
     before(async () => {
         community = await Community.getDefault()
@@ -49,6 +49,7 @@ describe('TupeloIdentity', () => {
         const addr = await key.address()
 
         await community.playTransactions(tree, [setOwnershipTransaction([addr])])
+        // await community.playTransactions(tree, [setDataTransaction("test", "nothing")])
 
         const did = await tree.id()
         if (did === null) {
