@@ -1,6 +1,6 @@
 {
-  "name": "orbitplay",
-  "version": "1.0.0",
+  "name": "orbitdb-tupelo",
+  "version": "0.0.1",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
