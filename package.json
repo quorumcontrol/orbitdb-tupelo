@@ -2,7 +2,8 @@
   "name": "orbitplay",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "dependencies": {
     "@types/orbit-db": "git+https://github.com/orbitdb/orbit-db-types.git",
     "@types/rimraf": "^2.0.3",
@@ -26,7 +27,7 @@
     "typescript": "^3.7.3"
   },
   "scripts": {
-    "start": "parcel index.html",
+    "build": "npx tsc",
     "test": "mocha --exit -r ts-node/register src/*.spec.ts src/**/*.spec.ts"
   },
   "keywords": [],
