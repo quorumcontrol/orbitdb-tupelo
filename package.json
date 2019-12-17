@@ -10,7 +10,7 @@
     "libp2p-webrtc-star": "^0.16.1",
     "orbit-db": "^0.23.0",
     "tupelo-messages": "^2.0.2",
-    "tupelo-wasm-sdk": "file://../tupelo-wasm-sdk",
+    "tupelo-wasm-sdk": "next",
     "wrtc": "^0.4.2"
   },
   "devDependencies": {
