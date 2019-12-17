@@ -27,12 +27,12 @@
     "typescript": "^3.7.3"
   },
   "scripts": {
-    "build": "npx tsc",
+    "build": "tsc",
     "test": "mocha --exit -r ts-node/register src/*.spec.ts src/**/*.spec.ts"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "browserslist": [
     "last 2 Chrome versions"
   ]
