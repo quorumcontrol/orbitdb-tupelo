@@ -27,6 +27,7 @@ describe("TupeloAccessController", ()=> {
     before(async () => {
         rmrf.sync(keypath)
         community = await Community.getDefault()
+        TupeloIdentityProvider.community = Community.getDefault()
         Identities.addIdentityProvider(TupeloIdentityProvider)
         AccessControllers.addAccessController({AccessController: TupeloAccessController})
         keystore = new Keystore(keypath)

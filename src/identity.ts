@@ -1,6 +1,9 @@
-import Identities, {IdentityProvider, IdentityAsJson, IdentityProviderOptions } from 'orbit-db-identity-provider'
-import {ChainTree, EcdsaKey, Tupelo, Community} from 'tupelo-wasm-sdk'
+import {IdentityProvider, IdentityAsJson, IdentityProviderOptions } from 'orbit-db-identity-provider'
+import {ChainTree, Tupelo, Community} from 'tupelo-wasm-sdk'
 import { Signature } from 'tupelo-messages/signatures/signatures_pb';
+import debug from 'debug';
+
+const log = debug("orbitdb-tupelo:identity")
 
 // see https://github.com/orbitdb/orbit-db-identity-provider/blob/master/src/identity-provider-interface.js
 
@@ -13,13 +16,21 @@ export interface TupeloIdentityProviderOptions extends IdentityProviderOptions {
     tree: ChainTree,
 }
 
+
 export class TupeloIdentityProvider extends IdentityProvider {
+    static community?:Promise<Community>
+
     static get type() { return type }
     static async verifyIdentity(identity:IdentityAsJson) {
-        console.log("verifying identity: ", identity)
-        const c = await Community.getDefault()
+        log("verifying identity: ", identity)        
+        if (!TupeloIdentityProvider.community) {
+            throw new Error("you must call TupeloIdentityProvider.community = Promise<Community> before verifying an identity")
+        }
+        let c = await TupeloIdentityProvider.community
+
         let tip
         try {
+            log("finding: ", c, ", did: ", identity.id)
             tip = await c.getTip(identity.id)
         } catch(e) {
             console.error("couldn't find tip: ", e)
