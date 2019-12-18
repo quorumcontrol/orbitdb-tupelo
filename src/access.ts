@@ -1,7 +1,6 @@
 import AccessController from "orbit-db-access-controllers/src/access-controller-interface";
 import OrbitDB from "orbit-db";
 import { ChainTree, Community } from "tupelo-wasm-sdk";
-import { IdentityProvider } from "orbit-db-identity-provider";
 
 const type = 'tupelo-access-controller'
 
@@ -10,6 +9,8 @@ export interface TupeloAccessControllerOptions {
 }
 
 export class TupeloAccessController extends AccessController {
+    static community:Promise<Community>
+
     did: string
     private tree?: ChainTree
 
@@ -29,7 +30,12 @@ export class TupeloAccessController extends AccessController {
             return Promise.resolve(false)
         }
 
-        const c = await Community.getDefault()
+        if (!TupeloAccessController.community) {
+            throw new Error("you must call TupeloAccessController.community = Promise<Community> before using the access controller")
+        }
+
+        const c = await TupeloAccessController.community
+
         console.log('searching for did: "',this.did + "'")
         const dbTip = await c.getTip(this.did)
         const tree = new ChainTree({
